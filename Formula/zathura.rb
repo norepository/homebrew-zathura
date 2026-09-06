@@ -32,7 +32,7 @@ class Zathura < Formula
 
   patch do
     url "file://#{__dir__}/../patches/mac-integration.diff"
-    sha256 "8c8b1546d18418c1c43579365bd810a022b30c655edc60364d1867ee4b3ba00f"
+    sha256 "7f75829c6094dfe576656620dd206491552a71c568afe8c38ec3d246ef1eb98f"
   end
 
   on_macos do
@@ -64,9 +64,11 @@ class Zathura < Formula
 
   def caveats
     <<~EOS
-      Zathura is, by default, only a command line tool. To use it as an app with a .app file, run:
-        (curl https://raw.githubusercontent.com/homebrew-zathura/homebrew-zathura/refs/heads/master/convert-into-app.sh | sh)
-      If this does not work, try downloading the script from the repo and running it manually.
+      Zathura is, by default, only a command line tool. To build a self-contained
+      /Applications/Zathura.app (bundles every dependency, survives brew upgrades), run:
+        curl -fsSL https://raw.githubusercontent.com/homebrew-zathura/homebrew-zathura/refs/heads/master/convert-into-app.sh | bash
+      Install your plugins (e.g. zathura-pdf-mupdf) first; afterwards these formulae
+      can be uninstalled, the app keeps working.
     EOS
   end
   test do

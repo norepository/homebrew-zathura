@@ -53,27 +53,43 @@ render PDFs.
 brew install [zathura-cb] [zathura-djvu] [zathura-pdf-mupdf] [zathura-pdf-poppler] [zathura-ps]
 ```
 
-After you install all required plugins you need to put them in
-a directory where zathura can find them. To do this, run the
-following command. You have to run this command only after
-installing new plugins.
+If you only want the command line binary, link the plugins where
+zathura looks for them (needed after installing new plugins):
 
 ```sh
 d=$(brew --prefix zathura)/lib/zathura ; mkdir -p $d ; for n in cb djvu pdf-mupdf pdf-poppler ps ; do p=$(brew --prefix zathura-$n)/lib$n.dylib ; [[ -f $p ]] && ln -s $p $d ; done
 ```
 
+If you want the app bundle, skip that step — the script below does it for you.
+
 ### App bundle
 
-To use zathura as macOS application, run following command.
-You have to run this command each time you're installing new
-plugins to update bundle info.
-
 ```sh
-curl https://raw.githubusercontent.com/homebrew-zathura/homebrew-zathura/refs/heads/master/convert-into-app.sh | sh
+curl -fsSL https://raw.githubusercontent.com/homebrew-zathura/homebrew-zathura/refs/heads/master/convert-into-app.sh | bash
 ```
 
-If this does not work, try downloading the script from the repo
-and running it manually.
+This builds a **self-contained** `/Applications/Zathura.app`: every dylib,
+plugin and GTK runtime file is copied inside the bundle, relinked to
+`@executable_path` and ad-hoc signed. The app does not read anything from
+`$(brew --prefix)` at runtime, so `brew upgrade` can no longer break it.
+
+Once built, the Homebrew packages are only build artifacts and can be removed:
+
+```sh
+brew uninstall --force --ignore-dependencies zathura zathura-pdf-mupdf girara gtk+3
+```
+
+Re-run the script whenever you install a new plugin or update zathura
+(re-install the formulae first, then rebuild the bundle).
+
+To also get the command line, point it at the bundle:
+
+```sh
+ln -sf /Applications/Zathura.app/Contents/MacOS/zathura /usr/local/bin/zathura
+```
+
+The `warning: Found no plugins` line on startup is cosmetic: zathura probes
+its compiled-in plugin directory before the bundle loads its own plugins.
 
 ## Copying to clipboard
 
