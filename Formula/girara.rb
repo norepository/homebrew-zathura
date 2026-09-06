@@ -9,7 +9,6 @@ class Girara < Formula
   depends_on "meson" => :build
   depends_on "ninja" => :build
   depends_on "pkg-config" => :build
-  depends_on "cmake"
   depends_on "gettext"
   depends_on "gtk+3"
   depends_on "json-c"
@@ -18,21 +17,12 @@ class Girara < Formula
   depends_on "libpthread-stubs"
 
   def install
-    inreplace "girara/utils.c" do |s|
-      # s.gsub!(/xdg-open/, "open")
-      s.gsub!("xdg-open", "open")
-    end
-    # Set HOMBREW_PREFIX
-    ENV["CMAKE_INSTALL_PREFIX"] = prefix
+    inreplace "girara/utils.c", "xdg-open", "open"
 
     mkdir "build" do
       system "meson", *std_meson_args, ".."
       system "ninja"
       system "ninja", "install"
     end
-  end
-
-  test do
-    system "true" # TODO
   end
 end

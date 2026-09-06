@@ -10,7 +10,6 @@ class ZathuraPdfMupdf < Formula
     regex(/^v?(\d+(?:\.\d+)+)$/i)
   end
 
-  depends_on "cmake" => :build
   depends_on "meson" => :build
   depends_on "ninja" => :build
   depends_on "pkg-config" => :build
@@ -36,9 +35,5 @@ class ZathuraPdfMupdf < Formula
 
       More information as to why this is needed: https://github.com/zegervdv/homebrew-zathura/issues/19
     EOS
-  end
-
-  test do
-    system "true" # TODO
   end
 end

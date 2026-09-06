@@ -5,5 +5,7 @@ Use this when you update the version for zathura, girara, or any of the plugins.
 ## Usage
 
 ```bash
-uv run main.py
+python3 sync/main.py
 ```
+
+It rewrites the hashes, then `brew reinstall --build-from-source` on every formula.
