@@ -4,14 +4,13 @@ class Zathura < Formula
   url "https://github.com/pwmt/zathura/archive/refs/tags/2026.02.09.tar.gz"
   sha256 "ee890591608a79e75e9719054c4f29c4a611172484e93e43126651d3d5cd9477"
   license "Zlib"
-  head "https://github.com/pwmt/zathura.git", branch: "develop"
+  # No head: the mac-integration patch does not apply to the develop branch.
 
   livecheck do
     url :stable
     regex(/^v?(\d+(?:\.\d+)+)$/i)
   end
 
-  depends_on "cmake" => :build
   depends_on "meson" => :build
   depends_on "ninja" => :build
   depends_on "pkg-config" => :build

@@ -31,7 +31,8 @@ one depends on the implementation and may change at any time.
 ### Install zathura
 
 > [!warning]
-> Installing zathura with `--HEAD` flag is deprecated and will not work. Please use the commands below.
+> There is no `--HEAD` build: the macOS integration patch does not apply to
+> upstream's `develop` branch. Please use the commands below.
 
 ```sh
 brew install zathura
@@ -94,7 +95,7 @@ Re-run the script whenever you install a new plugin or update zathura
 To also get the command line, point it at the bundle:
 
 ```sh
-ln -sf /Applications/Zathura.app/Contents/MacOS/zathura /usr/local/bin/zathura
+ln -sf /Applications/Zathura.app/Contents/MacOS/zathura "$(brew --prefix)/bin/zathura"
 ```
 
 The `warning: Found no plugins` line on startup is cosmetic: zathura probes

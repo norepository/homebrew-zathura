@@ -7,7 +7,6 @@ import hashlib
 import re
 import subprocess
 import sys
-import urllib.request
 from pathlib import Path
 
 # `url "..."` immediately followed by `sha256 "..."`. Group 1 is everything up
@@ -15,12 +14,17 @@ from pathlib import Path
 # Formulae whose url carries options (synctex: `using: :git`) never match.
 PAIR = re.compile(r'( *url "([^"]+)"\n *sha256 ")[^"]*')
 
+# Rebuilt before the formulae that link them; everything else keeps its order.
+FIRST = ("girara", "synctex", "zathura")
+
 
 def update(formula: Path) -> bool:
     def digest(match: re.Match[str]) -> str:
         url = match.group(2).replace("#{__dir__}", str(formula.resolve().parent))
-        with urllib.request.urlopen(url, timeout=60) as response:
-            return match.group(1) + hashlib.sha256(response.read()).hexdigest()
+        # curl, not urllib: it handles both https and the file:// patch urls, and
+        # does not depend on the CA bundle a python.org install ships without.
+        body = subprocess.run(["curl", "-fsSL", url], capture_output=True, check=True).stdout
+        return match.group(1) + hashlib.sha256(body).hexdigest()
 
     old = formula.read_text(encoding="utf-8")
     new = PAIR.sub(digest, old)
@@ -39,7 +43,15 @@ def main() -> None:
         if update(formula):
             print(f"Updated sha256 in {formula}")
 
-    for formula in formulae:
+    # Only rebuild what is already installed: `brew reinstall` would otherwise
+    # pull in every plugin, including both PDF backends at once.
+    installed = subprocess.run(
+        ["brew", "list", "--formula"], capture_output=True, text=True, check=True
+    ).stdout.split()
+    targets = [f for f in formulae if f.stem in installed]
+    targets.sort(key=lambda f: FIRST.index(f.stem) if f.stem in FIRST else len(FIRST))
+
+    for formula in targets:
         subprocess.run(["brew", "reinstall", "--build-from-source", formula], check=True)
 
 

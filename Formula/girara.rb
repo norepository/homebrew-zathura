@@ -6,6 +6,11 @@ class Girara < Formula
   license "Zlib"
   head "https://github.com/pwmt/girara.git", branch: "develop"
 
+  livecheck do
+    url :stable
+    regex(/^v?(\d+(?:\.\d+)+)$/i)
+  end
+
   depends_on "meson" => :build
   depends_on "ninja" => :build
   depends_on "pkg-config" => :build

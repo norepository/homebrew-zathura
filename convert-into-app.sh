@@ -157,4 +157,4 @@ echo
 echo "Built $APP ($(du -sh "$APP" | cut -f1)), self-contained."
 echo "Every brew package used to build it can now be removed:"
 echo "  brew uninstall --force --ignore-dependencies zathura zathura-pdf-mupdf girara gtk+3"
-echo "Optional CLI: ln -sf '$APP/Contents/MacOS/zathura' /usr/local/bin/zathura"
+echo "Optional CLI: ln -sf '$APP/Contents/MacOS/zathura' $BREW/bin/zathura"
