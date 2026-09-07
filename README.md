@@ -43,6 +43,15 @@ brew install zathura
 brew install zathura --with-synctex
 ```
 
+(or Optionally) with the macOS title bar removal patch:
+
+```sh
+brew install zathura --with-no-titlebar
+```
+
+Built this way, `zathura -T file.pdf` (or `--no-titlebar`) opens a frameless,
+rounded window. Without the flag zathura behaves as usual.
+
 ### Install plugins
 
 Install all required plugins. Note that `zathura` requires either
@@ -65,7 +74,7 @@ If you want the app bundle, skip that step — the script below does it for you.
 ### App bundle
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/homebrew-zathura/homebrew-zathura/refs/heads/master/convert-into-app.sh | bash
+curl -fsSL https://raw.githubusercontent.com/norepository/homebrew-zathura/refs/heads/master/convert-into-app.sh | bash
 ```
 
 This builds a **self-contained** `/Applications/Zathura.app`: every dylib,
@@ -117,8 +126,13 @@ Optionally untap the repo
 brew untap $(brew tap | grep zathura)
 ```
 
+## Updating formulae
+
+Maintainers: `python3 sync/main.py` rewrites the `sha256` of every formula from
+its current `url`. See [sync/README.md](sync/README.md).
+
 ## Roadmap
 
-- [ ] Frameless windows
-- [ ] Better app bundle and icon
+- [x] Frameless windows (opt-in, `--with-no-titlebar`)
+- [x] Better app bundle and icon
 - [x] More plugin support (CB and EPUP formats, full list [here](https://archlinux.org/packages/?q=zathura-))
